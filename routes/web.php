@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Models\Buku;
 use App\Models\Anggota;
+use App\Http\Controllers\KategoriController;
  
 Route::get('/', function () {
     return view('welcome');
@@ -248,3 +249,11 @@ Route::get('/test-accessor-scope', function () {
 
     return $html;
 });
+
+// ========== KATEGORI ==========
+
+Route::get('/kategori', [KategoriController::class, 'index']);
+
+Route::get('/kategori/{id}', [KategoriController::class, 'show']);
+
+Route::get('/kategori/search/{keyword}', [KategoriController::class, 'search']);
