@@ -45,7 +45,7 @@ Project ini dibuat untuk memenuhi tugas Pemrograman Web 2.
 ![Search Kategori](screenshots/search-kategori.png)
 
 
-# Tugas Pertemuan 11 - Migration, Seeder, Accessor & Scope Laravel
+# Tugas Pertemuan 10- Migration, Seeder, Accessor & Scope Laravel
 
 ## Identitas
 
