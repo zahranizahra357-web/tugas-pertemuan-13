@@ -207,4 +207,51 @@ class BukuController extends Controller
                 ->route('buku.index')
                 ->with('success', count($ids) . ' buku berhasil dihapus!');
         }
+
+            public function export()
+{
+                $bukus = Buku::all();
+
+                $filename = 'buku_' . date('Y-m-d_His') . '.csv';
+
+                $headers = [
+                    'Content-Type' => 'text/csv',
+                    'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+                ];
+
+                $callback = function () use ($bukus) {
+
+                    $file = fopen('php://output', 'w');
+
+                    fputcsv($file, [
+                        'Kode Buku',
+                        'Judul',
+                        'Kategori',
+                        'Pengarang',
+                        'Penerbit',
+                        'Tahun Terbit',
+                        'ISBN',
+                        'Harga',
+                        'Stok'
+                    ]);
+
+                    foreach ($bukus as $buku) {
+                        fputcsv($file, [
+                            $buku->kode_buku,
+                            $buku->judul,
+                            $buku->kategori,
+                            $buku->pengarang,
+                            $buku->penerbit,
+                            $buku->tahun_terbit,
+                            $buku->isbn,
+                            $buku->harga,
+                            $buku->stok
+                        ]);
+                    }
+
+                    fclose($file);
+                };
+
+                return response()->stream($callback, 200, $headers);
+            }
 }

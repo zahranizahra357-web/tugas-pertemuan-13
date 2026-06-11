@@ -25,6 +25,9 @@ Route::get('/buku/search', [BukuController::class, 'search'])
 Route::get('/buku/kategori/{kategori}', [BukuController::class, 'filterKategori'])
     ->name('buku.kategori');
 
+Route::get('/buku/export', [BukuController::class, 'export'])
+    ->name('buku.export');   
+
 // Anggota
 Route::resource('anggota', AnggotaController::class);
 

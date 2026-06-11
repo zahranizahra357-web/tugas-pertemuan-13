@@ -10,10 +10,17 @@
         Daftar Buku
     </h1>
 
-    <a href="{{ route('buku.create') }}" class="btn btn-primary">
-        <i class="bi bi-plus-circle"></i>
-        Tambah Buku
-    </a>
+    <div>
+        <a href="{{ route('buku.export') }}" class="btn btn-success me-2">
+            <i class="bi bi-download"></i>
+            Export CSV
+        </a>
+
+        <a href="{{ route('buku.create') }}" class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i>
+            Tambah Buku
+        </a>
+    </div>
 </div>
 
 <form action="{{ route('buku.search') }}" method="GET" class="mb-4">
@@ -103,14 +110,43 @@
     </div>
 </div>
 
+{{-- Bulk Delete --}}
+<form action="{{ route('buku.bulk-delete') }}" method="POST">
+
+    @csrf
+
+    <div class="mb-3">
+
+        <input type="checkbox" id="select-all">
+
+        <label for="select-all">
+            Pilih Semua
+        </label>
+
+        <button type="submit"
+                class="btn btn-danger ms-3"
+                onclick="return confirm('Yakin ingin menghapus buku yang dipilih?')">
+            Hapus Terpilih
+        </button>
+
+    </div>
+
 {{-- Daftar Buku --}}
 <div class="row">
 
     @forelse($bukus as $buku)
 
-        <div class="col-md-4 mb-4">
-            <x-buku-card :buku="$buku" />
+    <div class="col-md-4 mb-4">
+
+        <div class="mb-2">
+            <input type="checkbox"
+                   name="buku_ids[]"
+                   value="{{ $buku->id }}">
         </div>
+
+        <x-buku-card :buku="$buku" />
+
+    </div>
 
     @empty
 
@@ -124,33 +160,29 @@
 
 </div>
 
+</form>
+
 @endsection
 
 @push('scripts')
 <script>
-    // SweetAlert confirmation untuk delete
-    document.querySelectorAll('.btn-delete').forEach(button => {
-        button.addEventListener('click', function(e) {
-            e.preventDefault();
-            const form = this.closest('form');
-            const judul = this.getAttribute('data-judul');
-            
-            Swal.fire({
-                title: 'Konfirmasi Hapus',
-                text: `Apakah Anda yakin ingin menghapus buku "${judul}"?`,
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Ya, Hapus!',
-                cancelButtonText: 'Batal'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    form.submit();
-                }
+document.addEventListener('DOMContentLoaded', function () {
+
+    const selectAll = document.getElementById('select-all');
+
+    if (selectAll) {
+
+        selectAll.addEventListener('change', function () {
+
+            document.querySelectorAll('input[name="buku_ids[]"]').forEach(cb => {
+                cb.checked = this.checked;
             });
+
         });
-    });
+
+    }
+
+});
 </script>
 @endpush
 
